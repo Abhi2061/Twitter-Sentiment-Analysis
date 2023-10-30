@@ -12,8 +12,9 @@ body {
 #contact h1{
   color: #2f2b61;
   text-transform: uppercase;
-  font-size: 30px;
+  font-size: 60px;
   font-weight: 700;
+  margin-left: 125px;
 }
 
 .table {
@@ -26,4 +27,26 @@ body {
   border: 1px solid #e9ecef;
 }
 
+.container {
+  display: flex;
+}
+
+table th, table td {
+  padding: 5px 15px; /* Adjust the space between table columns with padding */
+}
+
+.table-container {
+  flex: 1;
+  padding: 10px;
+}
+
+.chart-container {
+  flex: 1;
+  padding: 10px;
+}
+
+.chart-container canvas {
+  width: 350px; 
+  height: 350px;
+}
 

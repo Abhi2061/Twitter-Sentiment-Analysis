@@ -3,24 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <title>Result</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Resultstyle.css') }}">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 
 <body>
 	<div id="contact">
-  <h1>Sentiment Analysis Result : </h1>
+    <h1>Sentiment Analysis Result</h1>
   </div>
-    <table class="table table-bordered">
-      {% for  value in result %}
-        <tr>
-          <th> {{value["sentiment"]}} </th>
-          <td> {{value["count"]}} </td>
-       </tr>
-      {% endfor %}
-    </table>
+
+  <div class="container">
+    <div class="table-container">
+        <h2 style="font-size: 40px;">Sentiment Data</h2>
+        <br>
+        <table style="font-size: 30px;">
+            <tr>
+                <th>Sentiment</th>
+                <th>Count</th>
+            </tr>
+            {% for item in result %}
+                <tr>
+                    <td>{{ item.sentiment }}</td>
+                    <td>{{ item.count }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
     
-</form>
+    <div class="chart-container">
+        <canvas id="sentimentChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Get the sentiment data from the Flask route
+    var sentimentData = {{ result | tojson | safe }};
+    var labels = sentimentData.map(item => item.sentiment);
+    var counts = sentimentData.map(item => item.count);
+
+    var ctx = document.getElementById('sentimentChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: counts,
+                backgroundColor: ["#36A2EB", "#FF6384", "#FFCE56"],
+            }],
+        },
+        options: {
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index];
+                        var count = data.datasets[0].data[tooltipItem.index];
+                        return label + ': ' + count;
+                    },
+                },
+            },
+            responsive: true, // Allow responsiveness
+            maintainAspectRatio: false, // Allow aspect ratio to be controlled
+            aspectRatio: 1, // Adjust the aspect ratio as needed
+        },
+    });
+</script>
+
+
 </body>
 
 </html>
